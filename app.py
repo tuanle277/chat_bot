@@ -1,12 +1,18 @@
 from tkinter import *
-from chat import get_response, bot_name
+from chat import get_response
+from preprocessing import *
+import tensorflow as tf
+import cv2open 
 
 BG_GRAY = "#ABB2B9"
 BG_COLOR = "#17202A"
 TEXT_COLOR = "#EAECEE"
 
+
 FONT = "Helvetica 14"
 FONT_BOLD = "Helvetica 13 bold"
+
+model = tf.keras.models.load_model('../output')
 
 class ChatApplication:
     
@@ -31,12 +37,24 @@ class ChatApplication:
         line = Label(self.window, width=450, bg=BG_GRAY)
         line.place(relwidth=1, rely=0.07, relheight=0.012)
         
-        # text widget
+        # question widget
         self.text_widget = Text(self.window, width=20, height=2, bg=BG_COLOR, fg=TEXT_COLOR,
                                 font=FONT, padx=5, pady=5)
         self.text_widget.place(relheight=0.745, relwidth=1, rely=0.08)
         self.text_widget.configure(cursor="arrow", state=DISABLED)
-        
+
+        # hint widget
+        self.text_widget = Text(self.window, width=20, height=2, bg=BG_COLOR, fg=TEXT_COLOR,
+                                font=FONT, padx=5, pady=5)
+        self.text_widget.place(relheight=0.745, relwidth=1, rely=0.08)
+        self.text_widget.configure(cursor="arrow", state=DISABLED)
+
+        # answer widget
+        self.text_widget = Text(self.window, width=20, height=2, bg=BG_COLOR, fg=TEXT_COLOR,
+                                font=FONT, padx=5, pady=5)
+        self.text_widget.place(relheight=0.745, relwidth=1, rely=0.08)
+        self.text_widget.configure(cursor="arrow", state=DISABLED)
+
         # scroll bar
         scrollbar = Scrollbar(self.text_widget)
         scrollbar.place(relheight=1, relx=0.974)
@@ -64,15 +82,18 @@ class ChatApplication:
     def _insert_message(self, msg, sender):
         if not msg:
             return
+
+        question, answer = get_response(model, msg)
         
         self.msg_entry.delete(0, END)
         msg1 = f"{sender}: {msg}\n\n"
         print(msg1)
         self.text_widget.configure(state=NORMAL)
         self.text_widget.insert(END, msg1)
+        self.text_widget.insert(END, f"did you mean: {question}\n\n")
         self.text_widget.configure(state=DISABLED)
         
-        msg2 = f"{bot_name}: {get_response(msg)}\n\n"
+        msg2 = f"Jarvis: {answer}\n\n"
         self.text_widget.configure(state=NORMAL)
         self.text_widget.insert(END, msg2)
         self.text_widget.configure(state=DISABLED)

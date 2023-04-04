@@ -9,8 +9,6 @@ from nltk.probability import FreqDist
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-# from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
-# from PIL import Image
 
 def KMPSearch(pat, txt):
     M = len(pat)
@@ -81,6 +79,10 @@ def getLine(fileName, size=0):
 
 def remove_punctuation(data):
     return (re.sub(r'[^\w\s]', '', str(data)))
+
+def remove_fillers(data):
+    data = lower(data)
+    fillers = 
 
 
 def get_top_n_bigram(corpus, n=None):
