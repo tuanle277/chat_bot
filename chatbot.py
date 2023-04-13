@@ -1,4 +1,5 @@
 import tensorflow as tf
+import random
 from tensorflow.keras import regularizers
 from preprocessing import *
 from transformer import *
@@ -27,7 +28,7 @@ def build_model(total_words, max_sequence_len):
     # model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
     embed_dim = 32  # Embedding size for each token
-    num_heads = 12  # Number of attention heads
+    num_heads = 200  # Number of attention heads
     ff_dim = 32  # Hidden layer size in feed forward network inside transformer
 
     inputs = tf.keras.layers.Input(shape=(max_sequence_len - 1,))
@@ -47,7 +48,8 @@ def build_model(total_words, max_sequence_len):
     return model
 
 def train():
-    input_sequence, num_words, _, _, _ = readDataTokenize('../questions.txt', 1500)
+    # input_sequence, num_words, _, _, _ = readDataTokenize('../questions.txt', 1500)
+    input_sequence, num_words, _, _, _ = readIntents()
     max_sequence_len = max([len(x) for x in input_sequence])
     x,y = preprocessing(input_sequence, num_words) # x contains all the sentences, y (one-hot coded) contains all the next words, so the training basically learns which word is best fit as the next word of the sentence.
     print(x.shape, y.shape)
@@ -56,9 +58,11 @@ def train():
     model.fit(x, y, epochs = 150, verbose = 1)
     model.save("output/")
 
-def get_response(model, test_sequence):
-    answers = getLine('../answers.txt', 1000)
-    input_sequence, num_words, token, _, corpus= readDataTokenize('../questions.txt', 1000)
+
+# generate responses from another corpus of responses to each of the texts -> map text with text 
+def get_response_v1(model, test_sequence):
+    answers = getLine('../answers.txt', 1500)
+    input_sequence, num_words, token, _, corpus = readDataTokenize('../questions.txt', 1500)
     i = 0
     got_response = False
 
@@ -91,11 +95,64 @@ def get_response(model, test_sequence):
 
     return question, "I don't understand"
 
+# generate responses from a list of potential answers to a specific tag -> map tag with text then generate random response from tag
+def get_response_v2(model, test_sequence):
+    intents = getIntents("intents.json")
+    tags = getTags("intents.json")
+    input_sequence, num_words, token, _, corpus = readIntents()
+    i = 0
+    got_response = False
+
+    # found the one correct pattern -> break true
+    # did not find anything after 30 words -> break false
+    # found more than one pattern -> break false
+    # detect pattern but lengths don't match -> keep running 
+
+    while len(test_sequence.split(" ")) < 30:
+        search_result = search(test_sequence, corpus)
+        if type(search_result) == tuple and search_result[0]:
+            got_response = True
+            i = search_result[1]
+            break
+        elif type(search_result) == bool:
+            break
+
+        i = search_result[1] 
+
+        token_list = token.texts_to_sequences([test_sequence])[0]
+        max_sequence_len = max([len(x) for x in input_sequence])
+        token_list = tf.keras.preprocessing.sequence.pad_sequences([token_list], maxlen = max_sequence_len - 1, padding = 'pre')
+        predicted = list(model.predict(token_list, verbose = 0)[0])
+        predicted = predicted.index(max(predicted))
+
+        output_words = ""
+        for word, index in token.word_index.items():
+            if index == predicted:
+                output_words = word
+                break
+        test_sequence += " "+ output_words
+        print(test_sequence)
+
+    question, tag = corpus[i], tags[i]
+
+    for intent in intents:
+        if intent['tag'] == tag: responses = intent['responses']
+
+    answer = responses[random.randint(0, len(responses) - 1)]
+
+    if got_response:
+        print("Question:", question)
+        print("Answer:", answer)
+        return question, answer 
+
+    print("I don't understand, can you repeat that boss?")
+    return question, "I don't understand, can you repeat that boss?"
 
 
-train()
-model = tf.keras.models.load_model('../output')
+
+# train()
+model = tf.keras.models.load_model('output')
 s = input()
-get_response(model, s)
+get_response_v2(model, s)
 
 

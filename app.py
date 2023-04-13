@@ -1,25 +1,24 @@
 from tkinter import *
-from chat import get_response
+from chat import get_response_v2
 from preprocessing import *
+from utils import *
 import tensorflow as tf
-import cv2open 
 
 BG_GRAY = "#ABB2B9"
 BG_COLOR = "#17202A"
 TEXT_COLOR = "#EAECEE"
 
-
 FONT = "Helvetica 14"
 FONT_BOLD = "Helvetica 13 bold"
 
-model = tf.keras.models.load_model('../output')
+model = tf.keras.models.load_model('output')
 
 class ChatApplication:
     
     def __init__(self):
         self.window = Tk()
         self._setup_main_window()
-        
+
     def run(self):
         self.window.mainloop()
         
@@ -83,14 +82,14 @@ class ChatApplication:
         if not msg:
             return
 
-        question, answer = get_response(model, msg)
+        question, answer = get_response_v2(model, msg)
         
         self.msg_entry.delete(0, END)
         msg1 = f"{sender}: {msg}\n\n"
         print(msg1)
         self.text_widget.configure(state=NORMAL)
         self.text_widget.insert(END, msg1)
-        self.text_widget.insert(END, f"did you mean: {question}\n\n")
+        # self.text_widget.insert(END, f"did you mean: {question}\n\n")
         self.text_widget.configure(state=DISABLED)
         
         msg2 = f"Jarvis: {answer}\n\n"

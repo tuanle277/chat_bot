@@ -1,0 +1,115 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hey",
+        "How are you",
+        "Is anyone there?",
+        "Hello",
+        "Good day",
+        "What are you doing?",
+        "Howdy!",
+        "Good morning!",
+        "I have something to say",
+        "jarvis!",
+        "Hey Jarvis"
+      ],
+      "responses": [
+        "Hey :-)",
+        "Hello, thanks for visiting",
+        "Hi there, what can I do for you?",
+        "Hi there, how can I help?",
+        "Hello Boss",
+        "Good day boss",
+        "How can I help you boss"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye", "Alright, that's it for today", "Good work"],
+      "responses": [
+        "See you later, thanks for visiting",
+        "Have a nice day",
+        "Bye! Come back again soon.",
+        "Thank you boss",
+        "Have a good day boss"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!", "You're doing good", "You're doing great"],
+      "responses": ["Happy to help!", "Any time!", "My pleasure", "Thank you boss", "You're very welcome sir"]
+    },
+    {
+      "tag": "items",
+      "patterns": [
+        "Which items do you have?",
+        "What kinds of items are there?",
+        "What do you sell?"
+      ],
+      "responses": [
+        "We sell coffee and tea",
+        "We have coffee and tea"
+      ]
+    },
+    {
+      "tag": "payments",
+      "patterns": [
+        "Do you take credit cards?",
+        "Do you accept Mastercard?",
+        "Can I pay with PayPal?",
+        "Are you cash only?"
+      ],
+      "responses": [
+        "We accept VISA, Mastercard and PayPal",
+        "We accept most major credit cards, and PayPal"
+      ]
+    },
+    {
+      "tag": "delivery",
+      "patterns": [
+        "How long does delivery take?",
+        "How long does shipping take?",
+        "When do I get my delivery?"
+      ],
+      "responses": [
+        "Delivery takes 2-4 days",
+        "Shipping takes 2-4 days"
+      ]
+    },
+    {
+      "tag": "joke",
+      "patterns": [
+        "Tell me a joke!",
+        "Tell me something funny!",
+        "Do you know a joke?",
+        "joke",
+        "lighten my mood",
+        "I need something to lighten my mood"
+      ],
+      "responses": [
+        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
+        "What did the buffalo say when his son left for college? Bison.",
+        "What do you call a factory that makes okay products? A satisfactory.",
+        "Dear Math, grow up and solve your own problems.",
+        "What did the janitor say when he jumped out of the closet? Supplies!",
+        "Have you heard about the chocolate record player? It sounds pretty sweet.",
+        "What did the ocean say to the beach? Nothing, it just waved.",
+        "Why do seagulls fly over the ocean? Because if they flew over the bay, we'd call them bagels.",
+        "I only know 25 letters of the alphabet. I don't know y.",
+        "How does the moon cut his hair? Eclipse it.",
+        "What did one wall say to the other? I'll meet you at the corner.",
+        "What did the zero say to the eight? That belt looks good on you.",
+        "A skeleton walks into a bar and says, 'Hey, bartender. I'll have one beer and a mop.'",
+        "Where do fruits go on vacation? Pear-is!",
+        "I asked my dog what's two minus two. He said nothing.",
+        "What did Baby Corn say to Mama Corn? Where's Pop Corn?",
+        "What's the best thing about Switzerland? I don't know, but the flag is a big plus.",
+        "What does a sprinter eat before a race? Nothing, they fast!"
+      ]
+    }
+  ]
+}
+

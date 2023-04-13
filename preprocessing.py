@@ -33,7 +33,6 @@ def get_sequence_of_tokens(corpus):
         # convert the sequences into vectors with each element being the values of dictionary "word_index"
         token_list = tokenizer.texts_to_sequences([line])[0]
         for i in range(1, len(token_list)):
-            print(token_list[i])
             n_gram_sequence = token_list[:i+1]
             input_sequences.append(n_gram_sequence)
             labels.append(corpus.index(line))
@@ -71,6 +70,11 @@ def readDataTokenize(fileName, size=0):
 
     inp_sequences, total_words, tokenizer, labels, corpus = get_sequence_of_tokens(input_sequences) 
 
+    return inp_sequences, total_words, tokenizer, labels,  corpus
+
+def readIntents():
+    input_sequences = getPatterns("intents.json")
+    inp_sequences, total_words, tokenizer, labels, corpus = get_sequence_of_tokens(input_sequences) 
     return inp_sequences, total_words, tokenizer, labels,  corpus
 
 

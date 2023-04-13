@@ -2,6 +2,7 @@ import re
 import string
 import collections
 import nltk.tokenize
+import json
 
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk.tokenize import RegexpTokenizer
@@ -80,9 +81,9 @@ def getLine(fileName, size=0):
 def remove_punctuation(data):
     return (re.sub(r'[^\w\s]', '', str(data)))
 
-def remove_fillers(data):
-    data = lower(data)
-    fillers = 
+# def remove_fillers(data):
+#     data = lower(data)
+#     fillers = 
 
 
 def get_top_n_bigram(corpus, n=None):
@@ -93,29 +94,80 @@ def get_top_n_bigram(corpus, n=None):
     words_freq = sorted(words_freq, key = lambda x: x[1], reverse=True)
     return words_freq[:n]
 
-def searchF(txt, corpus):
+def searchF(txt, corpus): # pattern matching from start
     length = len(txt)
-    for index in range(len(corpus)):
+    num_match = 0
+    index = 0
+    for i in range(len(corpus)):
         # print(txt)
         # print(corpus[index])
         # print("================================")
 
-        if txt == corpus[index][:length]:
-            return True, index
+        if txt.lower() == corpus[i][:length].lower():
+            num_match += 1 # This is for checking if there are more than 1 text that matches with this pattern, if yes then say "I don't understand" because of ambiguity
+            index = i
+            
 
         # if KMPSearch(txt, text):
         #     return True 
         # else:
         #     return txt 
+
+    if num_match == 1:
+        return True, index
+    elif num_match > 1:
+        return False
+
     return False, index
 
-def search(txt, corpus):
-    for index in range(len(corpus)):
+def search(txt, corpus): # -> KMP pattern matching
+    num_match = 0
+    index = 0
+    for i in range(len(corpus)):
         # print(txt)
-        # print(corpus[index])
+        # print(corpus[i])
         # print("================================")
+        if KMPSearch(txt.lower(), corpus[i].lower()) and abs(len(txt) - len(corpus[i])) <= 1:
+            return True, i 
 
-        if KMPSearch(txt, text):
-            return True, index
+        if KMPSearch(txt.lower(), corpus[i].lower()) and len(txt) < len(corpus[i]):
+            num_match += 1
+            index = i
+
+    if num_match == 1: 
+        return True, index
+    elif num_match > 1:
+        return False
 
     return False, index
+
+def getIntents(fileName):
+    with open(fileName) as f:
+        x = json.load(f)
+
+    return x['intents']
+
+def getPatterns(fileName):
+    patterns = []
+    with open(fileName) as f:
+        x = json.load(f)
+
+    intents = x['intents']
+    for intent in intents:
+        patterns += intent['patterns']
+
+    return patterns 
+
+def getTags(fileName):
+    tags = []
+    with open(fileName) as f:
+        x = json.load(f)
+
+    intents = x['intents']
+    for intent in intents:
+        for pattern in intent['patterns']:    
+            tags.append(intent['tag'])
+
+    return tags
+
+
