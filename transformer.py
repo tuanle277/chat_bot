@@ -24,7 +24,9 @@ class TransformerEncoder(tf.keras.layers.Layer):
 
         # Adding embedding and position encoding.
         x = self.embedding(x)  # (batch_size, input_seq_len, d_model)
+
         x *= tf.math.sqrt(tf.cast(self.d_model, tf.float32))
+        print(self.positional_encoding[:, :seq_len, :])
         x += self.positional_encoding[:, :seq_len, :]
 
         x = self.dropout(x, training=training)
@@ -67,7 +69,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
         angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
 
         pos_encoding = angle_rads[np.newaxis, ...]
-
+        # pos_encoding = np.reshape(pos_encoding, (pos_encoding.shape[1], pos_encoding.shape[2]))
         return tf.cast(pos_encoding, dtype=tf.float32)
 
 

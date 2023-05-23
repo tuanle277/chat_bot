@@ -2,14 +2,15 @@ import re
 import string
 import collections
 import nltk.tokenize
+import os 
 import json
 
-from sklearn.feature_extraction.text import CountVectorizer
-from nltk.tokenize import RegexpTokenizer
-from nltk.probability import FreqDist
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+# from sklearn.feature_extraction.text import CountVectorizer
+# from nltk.tokenize import RegexpTokenizer
+# from nltk.probability import FreqDist
+# from nltk.stem import WordNetLemmatizer
+# from nltk.corpus import stopwords
+# from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 def KMPSearch(pat, txt):
     M = len(pat)
@@ -30,7 +31,6 @@ def KMPSearch(pat, txt):
             j += 1
  
         if j == M:
-            print ("Found pattern at index", str(i-j))
             j = lps[j-1]
             return True
  
@@ -169,5 +169,40 @@ def getTags(fileName):
             tags.append(intent['tag'])
 
     return tags
+
+def searchWiki(text, data):
+    num_match = 0 
+    index = 0
+    for i in range(len(data)):
+        if KMPSearch(text.lower(), data[i]['title'].lower()):
+            num_match += 1
+            index = i 
+    
+    if num_match == 1:
+        return d[index]['text']
+
+    return "I don't understand"
+
+def getWiki():
+    files = os.listdir("../wikidata")
+    data = []
+    for file in files:
+        file = "../wikidata/" + file 
+        with open(file) as f:
+            x = json.load(f)
+
+        data += x 
+
+    text = input()
+    print(searchWiki(text, data))
+    return data 
+
+
+# get the verbs
+# get the question words 
+# get the subject/objects 
+def context_scraping(sentence):
+    question_words = ['when', 'why', 'what', 'how', 'who']
+
 
 
